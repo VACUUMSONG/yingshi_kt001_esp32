@@ -36,13 +36,20 @@ void Car::updateSpeed(float vel, float anguler) {
     backRWheel.updateTargetVel(speedR);
 }
 
+
+// 获取左轮速度
+float Car::getLVel(){
+    return backLWheel.getVel();
+}
+// 获取右轮速度
+float Car::getRVel(){
+    return backRWheel.getVel();
+}
+
 float Car::getVel() {
     //获取左右轮子的速度
     float lSpeed = backLWheel.getVel();
     float rSpeed = backRWheel.getVel();
-    // mylog("current l_Speed:%d", (int) (lSpeed * 100));
-    // mylog("current r_Speed:%d", (int) (rSpeed * 100));
-
     return (lSpeed+rSpeed)/2;
 }
 

@@ -31,6 +31,10 @@ public:
     void updateSpeed(float vel,float anguler);
     //获取线速度
     float getVel();
+
+    float getLVel(); // 获取左轮速度
+    float getRVel(); // 获取右轮速度
+
     //获取角速度
     float getAnguler();
 };

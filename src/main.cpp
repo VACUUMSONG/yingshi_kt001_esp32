@@ -52,7 +52,9 @@ enum frameState
 };
 uint8_t frame_type; // velocity; pid; correction; 
 frameState state = State_Head1; // init with state==Head1
-uint8_t command[rBUFFER_SIZE]; // 指令
+
+uint8_t command[rBUFFER_SIZE];    // 接收的指令
+uint8_t publishMsg[sBUFFER_SIZE]; // 发送的指令
 
 void setup() {
   Serial.begin(115200);
@@ -171,7 +173,6 @@ void loop() {
   Kt001.getVel();
 
   // publish msg to master
-  
 
   // Kt001.getVel();
   // Kt001.getAnguler();
