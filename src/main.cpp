@@ -33,6 +33,7 @@ Wheel rwheel(rmotor,rencoder, false);
 
 Car Kt001(lwheel,rwheel);
 /**====================================================**/
+TaskHandle_t readCommandTask;
 
 uint8_t checksum(uint8_t* buf, size_t len)
 {
@@ -43,37 +44,26 @@ uint8_t checksum(uint8_t* buf, size_t len)
   }
   return sum;
 }
-
-enum frameState
+void readCommand(void* param)
 {
-  State_Head1, State_Head2, State_Size, State_Type, 
-  State_Velocity, State_Pid, State_Params,
-  State_CheckSum, State_Handle
-};
-uint8_t frame_type; // velocity; pid; correction; 
-frameState state = State_Head1; // init with state==Head1
+  Serial.print(" start to receive command.\n");
+  enum frameState
+  {
+    State_Head1, State_Head2, State_Size, State_Type, 
+    State_Velocity, State_Pid, State_Params,
+    State_CheckSum, State_Handle
+  };
+  uint8_t frame_type; // velocity; pid; correction; 
+  frameState state = State_Head1; // init with state==Head1
+  uint8_t command[rBUFFER_SIZE]; // 指令
 
-uint8_t command[rBUFFER_SIZE];    // 接收的指令
-uint8_t publishMsg[sBUFFER_SIZE]; // 发送的指令
-
-void setup() {
-  Serial.begin(115200);
-  Kt001.init();
-  //create a task that will be executed in the Task1code() function, with priority 1 and executed on core 0
-  xTaskCreatePinnedToCore(
-                    readCommand,       /* Task function. */
-                    "readCommandTask", /* name of task. */
-                    10000,             /* Stack size of task */
-                    NULL,              /* parameter of the task */
-                    1,                 /* priority of the task */
-                    &readCommandTask,            /* Task handle to keep track of created task */
-                    1);                /* task on core 2*/
-
-}
-
-void loop() {
-  // receive msg master
-  if (Serial.available()>0){
+  //State machine
+  // [head1 head2 size type data checksum ]
+  // [0xAA  0x55  0x2D 0x01 ....  0xXX    ]
+  for(;;){
+    if (Serial.available()==0){
+      continue;
+    }
     switch (state)
     {
       case State_Head1:             //waiting for frame header 1
@@ -168,13 +158,44 @@ void loop() {
           break;
     }
   }
+}
+
+enum frameState
+{
+  State_Head1, State_Head2, State_Size, State_Type, 
+  State_Velocity, State_Pid, State_Params,
+  State_CheckSum, State_Handle
+};
+uint8_t frame_type; // velocity; pid; correction; 
+frameState state = State_Head1; // init with state==Head1
+
+uint8_t command[rBUFFER_SIZE];    // 接收的指令
+uint8_t publishMsg[sBUFFER_SIZE]; // 发送的指令
+
+void setup() {
+  Serial.begin(115200);
+  // gpio_install_isr_service();
+  Kt001.init();
+  //create a task that will be executed in the Task1code() function, with priority 1 and executed on core 0
+  xTaskCreatePinnedToCore(
+                    readCommand,       /* Task function. */
+                    "readCommandTask", /* name of task. */
+                    10000,             /* Stack size of task */
+                    NULL,              /* parameter of the task */
+                    1,                 /* priority of the task */
+                    &readCommandTask,            /* Task handle to keep track of created task */
+                    1);                /* task on core 2*/
+
+}
+
+void loop() {
 
   Kt001.spin(); //转动
   Kt001.getVel();
   send_data msg;
   // publish msg to master
-  set_publishmsg(publishMsg, msg);
-  Serial.write(publishMsg, sBUFFER_SIZE);
+  // set_publishmsg(publishMsg, msg);
+  //Serial.write(publishMsg, sBUFFER_SIZE);
 
   // Kt001.getVel();
   // Kt001.getAnguler();

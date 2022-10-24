@@ -4,7 +4,7 @@
 
 #include "Wheel.h"
 
-Wheel::Wheel(Motor motor, Encoder encoder, bool isleft) : motor(motor), encoder(encoder), pid(100, 0, 100) {
+Wheel::Wheel(Motor motor, Encoder encoder, bool isleft) : motor(motor), encoder(encoder), pid(5, 0, 0.5) {
     this->is_left_wheel = isleft;
 }
 
@@ -48,9 +48,19 @@ void Wheel::spin() {
     //调节速度 PID 通过PID工具 根据当前速度和目标速度  获取马达转动的pwm
     float pwm = pid.compute(this->targetSpeed, curSpeed);
     if (this->is_left_wheel){
-        mylog("left:  ExpSpeed:%d, CurSpeed:%d, pwm:%d", (int)(this->targetSpeed * 100), (int)(curSpeed*100), (int)(pwm));
+        Serial.println("left:  ExpSpeed:");
+        Serial.println((int)(this->targetSpeed * 100));
+        Serial.println("left:  CurSpeed:");
+        Serial.println((int)(curSpeed * 100));
+        Serial.println("left:  pwm:");
+        Serial.println((int)(pwm));
     }else{
-        mylog("right: ExpSpeed:%d, CurSpeed:%d, pwm:%d", (int)(this->targetSpeed * 100), (int)(curSpeed*100), (int)(pwm));
+        Serial.println("right:  ExpSpeed:");
+        Serial.println((int)(this->targetSpeed * 100));
+        Serial.println("right:  CurSpeed:");
+        Serial.println((int)(curSpeed * 100));
+        Serial.println("right:  pwm:");
+        Serial.println((int)(pwm));
     }
 
     this->motor.spin((int) pwm);
