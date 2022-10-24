@@ -28,6 +28,7 @@ Encoder::Encoder(uint8_t MotorCountPin1, uint8_t MotorCountPin2, int direction, 
     this->motor_position = left_or_right;
     pinMode(this->motorCountPin1, INPUT); //编码器A引脚
     pinMode(this->motorCountPin2, INPUT); //编码器B引脚
+    this->timer = timerBegin(0, 8, true);
     
     // // 配置PCNT脉冲计数器
     // if (this->motor_position == LeftMotor){
@@ -56,6 +57,7 @@ void Encoder::init() {
     //编码器开启定时器
     if (this->motor_position == LeftMotor){
         attachInterrupt(digitalPinToInterrupt(this->motorCountPin1), Read_Left_Moto, RISING); //左轮脉冲开中断计数
+        timerAttachInterrupt(this->timer, &Read_Left_Moto, true); // 绑定中断函数
         //重置计数
         motor_left_counter =  0;
         //Serial.print("Left Encoder init.\n");
@@ -65,6 +67,7 @@ void Encoder::init() {
         // pcnt_counter_resume(PCNT_LEFT_UNIT);    // 开始
     }else if(this->motor_position == RightMotor){
         attachInterrupt(digitalPinToInterrupt(this->motorCountPin1), Read_Right_Moto, RISING); //左轮脉冲开中断计数
+        timerAttachInterrupt(this->timer, &Read_Right_Moto, true); // 绑定中断函数
         //重置计数
         motor_right_counter = 0;
         //Serial.print("Left Encoder init.\n");

@@ -59,15 +59,15 @@ uint8_t publishMsg[sBUFFER_SIZE]; // 发送的指令
 void setup() {
   Serial.begin(115200);
   Kt001.init();
-  // //create a task that will be executed in the Task1code() function, with priority 1 and executed on core 0
-  // xTaskCreatePinnedToCore(
-  //                   readCommand,       /* Task function. */
-  //                   "readCommandTask", /* name of task. */
-  //                   10000,             /* Stack size of task */
-  //                   NULL,              /* parameter of the task */
-  //                   1,                 /* priority of the task */
-  //                   &readCommandTask,            /* Task handle to keep track of created task */
-  //                   1);                /* task on core 2*/
+  //create a task that will be executed in the Task1code() function, with priority 1 and executed on core 0
+  xTaskCreatePinnedToCore(
+                    readCommand,       /* Task function. */
+                    "readCommandTask", /* name of task. */
+                    10000,             /* Stack size of task */
+                    NULL,              /* parameter of the task */
+                    1,                 /* priority of the task */
+                    &readCommandTask,            /* Task handle to keep track of created task */
+                    1);                /* task on core 2*/
 
 }
 
@@ -171,8 +171,10 @@ void loop() {
 
   Kt001.spin(); //转动
   Kt001.getVel();
-
+  send_data msg;
   // publish msg to master
+  set_publishmsg(publishMsg, msg);
+  Serial.write(publishMsg, sBUFFER_SIZE);
 
   // Kt001.getVel();
   // Kt001.getAnguler();
