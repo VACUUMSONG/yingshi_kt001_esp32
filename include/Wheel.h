@@ -43,6 +43,8 @@ public:
     //设置目标速度 速度单位: m/s
     void updateTargetVel(float speed);
 
+    void updatePid(float kp, float ki, float kd);
+
     //获取当前速度
     float getVel();
 };

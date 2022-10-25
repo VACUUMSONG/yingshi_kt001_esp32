@@ -36,6 +36,11 @@ void Car::updateSpeed(float vel, float anguler) {
     backRWheel.updateTargetVel(speedR);
 }
 
+void Car::updatePid(float kp, float ki, float kd){
+    backLWheel.updatePid(kp, ki, kd);
+    backRWheel.updatePid(kp, ki, kd);
+}
+
 
 // 获取左轮速度
 float Car::getLVel(){
@@ -58,3 +63,4 @@ float Car::getAnguler() {
     float rSpeed = backRWheel.getVel();
     return (rSpeed-lSpeed)/WHEEL_DISTANCE;
 }
+

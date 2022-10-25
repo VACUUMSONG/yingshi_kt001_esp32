@@ -15,6 +15,19 @@ void parse_rvelcommnad(uint8_t* rcommand, float& vel, float& angular)
     angular = (float)(angular_.i16value) / 1000;
 }
 
+void parse_pid(uint8_t* rcommand, float& kp, float& ki, float& kd){
+    uint_union kp_, ki_, kd_;
+    kp_.ivalue[0] = rcommand[5];
+    kp_.ivalue[1] = rcommand[4];
+    ki_.ivalue[0] = rcommand[7];
+    ki_.ivalue[1] = rcommand[6];
+    kd_.ivalue[0] = rcommand[9];
+    kd_.ivalue[1] = rcommand[8];
+    kp = (float)(kp_.i16value) / 1000;
+    ki = (float)(ki_.i16value) / 1000;
+    kd = (float)(kd_.i16value) / 1000;
+}
+
 /**
  * set publish msg
  **/

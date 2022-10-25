@@ -7,27 +7,23 @@ float vel = 0, angular = 0;
 #define MOTORL_PIN1 6
 #define MOTORL_PIN2 7
 #define MOTORL_PWN 0
-#define MOTORL_COUNTPIN1 2
-#define MOTORL_COUNTPIN2 3
 
 #define MOTORR_PIN1 10
 #define MOTORR_PIN2 18
 #define MOTORR_PWN 1
-#define MOTORR_COUNTPIN1 4 
-#define MOTORR_COUNTPIN2 5
 
 /*==================== 小车 ==========================*/
 // 左电机
 Motor lmotor(MOTORL_PIN1, MOTORL_PIN2, MOTORL_PWN, 1);
 // 左编码器
-Encoder lencoder(MOTORL_COUNTPIN1, MOTORL_COUNTPIN2, 1, LeftMotor);
+Encoder lencoder(-1, LeftMotor);
 // 左轮
 Wheel lwheel(lmotor, lencoder, true);
 
-// 左电机
+// 右电机
 Motor rmotor(MOTORR_PIN1, MOTORR_PIN2, MOTORR_PWN, -1);
 // 右编码器
-Encoder rencoder(MOTORR_COUNTPIN1, MOTORR_COUNTPIN2, -1, RightMotor);
+Encoder rencoder(1, RightMotor);
 // 右轮
 Wheel rwheel(rmotor,rencoder, false);
 
@@ -108,7 +104,7 @@ void readCommand(void* param)
           break;
       case State_Pid: //TODO
           Serial.readBytes(command+4, 6);
-          state = State_Head1;
+          state = State_CheckSum;
           break;
       case State_Params: // TODO
           Serial.readBytes(command+4, 6);
@@ -144,6 +140,9 @@ void readCommand(void* param)
             Kt001.updateSpeed(vel, angular);
 
           }else if (frame_type == receiveType_pid){
+            float kp,ki,kd; 
+            parse_pid(command, kp, ki, kd);
+            Kt001.updatePid(kp, ki, kd);
             // TODO
           }else if (frame_type == receiveType_params){
             // TODO

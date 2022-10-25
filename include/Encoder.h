@@ -6,6 +6,10 @@
 #define SMARTCAR_ENCODER_H
 #include <Arduino.h>
 #include <esp32-hal-timer.h>
+#define MOTORL_COUNTPIN1 2
+#define MOTORL_COUNTPIN2 3
+#define MOTORR_COUNTPIN1 4 
+#define MOTORR_COUNTPIN2 5
 
 typedef enum{
     LeftMotor,RightMotor
@@ -33,7 +37,7 @@ private:
     hw_timer_t *timer = NULL;
 
 public:
-    Encoder(uint8_t MotorCountPin1, uint8_t MotorCountPin2, int direction, MotorPosition left_or_right);
+    Encoder(int direction, MotorPosition left_or_right);
 
     ~Encoder();
 

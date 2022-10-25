@@ -29,6 +29,9 @@ public:
      * @param anguler 角速度 正  左转  负 右转
      */
     void updateSpeed(float vel,float anguler);
+
+    void updatePid(float kp, float ki, float kd);
+
     //获取线速度
     float getVel();
 

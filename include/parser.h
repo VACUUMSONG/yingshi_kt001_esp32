@@ -37,6 +37,10 @@ typedef	struct{
  * parser command from master computer
  */
 void parse_rvelcommnad(uint8_t* rcommand, float& vel, float& angular);
+/*
+ * parser pid from master computer
+ */
+void parse_pid(uint8_t* rcommand, float& kp, float& ki, float& kd);
 
 void set_publishmsg(uint8_t* smsg, send_data& send_data);
 
