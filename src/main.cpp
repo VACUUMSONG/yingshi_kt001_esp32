@@ -125,20 +125,8 @@ void readCommand(void* param)
             // parser to vel
             //float vel = 0, angular = 0;
             parse_rvelcommnad(command, vel, angular);
-            // Serial.print("vel: ");
-            // Serial.print(vel);
-            // Serial.print(" ,angular: ");
-            // Serial.print(angular);
-            // Serial.print("\t");
-            // for(int _i =0; _i <= 10; _i ++){
-            //   Serial.print(command[_i], DEC);
-            //   Serial.print(" ");
-            // }
-            // Serial.println("\n");
-
             //  update speed
             Kt001.updateSpeed(vel, angular);
-
           }else if (frame_type == receiveType_pid){
             float kp,ki,kd; 
             parse_pid(command, kp, ki, kd);
@@ -173,7 +161,6 @@ uint8_t publishMsg[sBUFFER_SIZE]; // 发送的指令
 
 void setup() {
   Serial.begin(115200);
-  // gpio_install_isr_service();
   Kt001.init();
   //create a task that will be executed in the Task1code() function, with priority 1 and executed on core 0
   xTaskCreatePinnedToCore(
@@ -186,15 +173,40 @@ void setup() {
                     1);                /* task on core 2*/
 
 }
+float last_pose_x, last_pose_y, last_angular;
 
 void loop() {
 
   Kt001.spin(); //转动
-  Kt001.getVel();
-  send_data msg;
+  
   // publish msg to master
-  // set_publishmsg(publishMsg, msg);
-  //Serial.write(publishMsg, sBUFFER_SIZE);
+  send_data msg;
+  float linear_vel = Kt001.getVel();
+  float angular_vel = Kt001.getAnguler();
+  float pose_x = Kt001.getPose_x();
+  float pose_y = Kt001.getPose_y();
+  float pose_angular = Kt001.getPose_angular();
+
+  msg.x_v.fv = linear_vel;
+  msg.y_v.fv = 0;
+  msg.angular_v.fv = angular_vel;
+  msg.x_pos.fv = pose_x;
+  msg.y_pos.fv = pose_y;
+  msg.pose_angular.fv = pose_angular;
+  // msg.x_v.fv = 0.0;
+  // msg.y_v.fv = 0.0;
+  // msg.angular_v.fv = 0.0;
+  // msg.x_pos.fv = 0.0;
+  // msg.y_pos.fv = 0.0;
+  // msg.pose_angular.fv = 0.0;
+  
+  // if(last_pose_x == pose_x && last_pose_y == pose_y && last_angular == pose_angular){
+  //   return;
+  // }
+  // last_pose_x = pose_x; last_pose_y = pose_y; last_angular = pose_angular;
+  // mylog("pose_x: %f, pose_y: %f, pose_angular: %f \n", pose_x, pose_y, pose_angular);
+  set_publishmsg(publishMsg, msg);
+  Serial.write(publishMsg, sBUFFER_SIZE);
 
   // Kt001.getVel();
   // Kt001.getAnguler();

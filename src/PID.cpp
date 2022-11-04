@@ -32,3 +32,9 @@ void PID::reset(){
     derivative = 0;
     prevError = 0;
 }
+
+void PID::init(){
+    this->kp = 2.636;
+    this->ki = 0;
+    this->kd = 1.611;
+}

@@ -31,6 +31,8 @@ public:
      *  重置所有的误差: 当设置的速度 和 上一次不一样
      */
     void reset();
+
+    void init();
 };
 
 

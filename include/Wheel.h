@@ -37,8 +37,8 @@ public:
     //初始化
     void init();
 
-    //不断执行 轮子转动 轮子不断速度逼近目标速度 40
-    void spin();
+    //不断执行 轮子转动 轮子不断速度逼近目标速度 40, 并返回移动距离
+    float spin();
 
     //设置目标速度 速度单位: m/s
     void updateTargetVel(float speed);

@@ -15,6 +15,12 @@ private:
     Wheel backLWheel;
     //右后方轮子
     Wheel backRWheel;
+
+    //位姿
+    float pose_x;
+    float pose_y;
+    float pose_angular;
+
 public:
     Car(Wheel backLWheel,Wheel backRWheel);
 
@@ -32,14 +38,19 @@ public:
 
     void updatePid(float kp, float ki, float kd);
 
-    //获取线速度
-    float getVel();
-
     float getLVel(); // 获取左轮速度
     float getRVel(); // 获取右轮速度
-
+    
+    //获取线速度
+    float getVel();
     //获取角速度
     float getAnguler();
+
+    //获取位姿
+    float getPose_x();
+    float getPose_y();
+    float getPose_angular();
+
 };
 
 

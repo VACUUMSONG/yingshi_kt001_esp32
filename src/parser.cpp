@@ -33,12 +33,12 @@ void parse_pid(uint8_t* rcommand, float& kp, float& ki, float& kd){
  **/
 void set_publishmsg(uint8_t* USARTzTxBuffer, send_data& com_x_send_data)
 {
-    com_x_send_data.x_pos.fv = 2.68;//x坐标
-	com_x_send_data.y_pos.fv = 3.96;//y坐标
-	com_x_send_data.x_v.fv	= 0.6;//x方向速度
-	com_x_send_data.y_v.fv = 0.0;//y 方向速度
-	com_x_send_data.angular_v.fv = 2.0;//角速度 绕z轴
-	com_x_send_data.pose_angular.fv = 1.0;//yaw偏航角 
+    // com_x_send_data.x_pos.fv = 2.68;//x坐标
+	// com_x_send_data.y_pos.fv = 3.96;//y坐标
+	// com_x_send_data.x_v.fv	= 0.6;//x方向速度
+	// com_x_send_data.y_v.fv = 0.0;//y 方向速度
+	// com_x_send_data.angular_v.fv = 2.0;//角速度 绕z轴
+	// com_x_send_data.pose_angular.fv = 1.0;//yaw偏航角 
 	
 	USARTzTxBuffer[0] = head1;
 	USARTzTxBuffer[1] = head2;
