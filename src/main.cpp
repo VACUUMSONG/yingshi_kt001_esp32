@@ -4,13 +4,16 @@
 #include "parser.h"
 
 float vel = 0, angular = 0;
-#define MOTORL_PIN1 6
-#define MOTORL_PIN2 7
-#define MOTORL_PWN 0
+//左电机驱动定义
+#define MOTORL_PWN 19
+#define MOTORL_PIN1 7
+#define MOTORL_PIN2 6
 
+
+//右电机驱动定义
+#define MOTORR_PWN 1
 #define MOTORR_PIN1 10
 #define MOTORR_PIN2 18
-#define MOTORR_PWN 1
 
 /*==================== 小车 ==========================*/
 // 左电机
@@ -159,6 +162,7 @@ frameState state = State_Head1; // init with state==Head1
 uint8_t command[rBUFFER_SIZE];    // 接收的指令
 uint8_t publishMsg[sBUFFER_SIZE]; // 发送的指令
 
+//Init
 void setup() {
   Serial.begin(115200);
   Kt001.init();

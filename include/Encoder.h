@@ -6,14 +6,19 @@
 #define SMARTCAR_ENCODER_H
 #include <Arduino.h>
 #include <esp32-hal-timer.h>
-#define MOTORL_COUNTPIN1 2
-#define MOTORL_COUNTPIN2 3
-#define MOTORR_COUNTPIN1 4 
-#define MOTORR_COUNTPIN2 5
+
+
+// 编码电机位置与编码线颜色
+// LR->左右 FB->前后  YW->黄白
+#define MOTORR_COUNTPIN1 2 // RB_W
+#define MOTORR_COUNTPIN2 3 // RB_Y
+
+#define MOTORL_COUNTPIN1 4 // LB_W
+#define MOTORL_COUNTPIN2 5 // LB_Y
 
 typedef enum{
     LeftMotor,RightMotor
-    } MotorPosition;
+} MotorPosition;
 
 //编码器
 //属性: 定时器  channel
