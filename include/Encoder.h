@@ -1,7 +1,3 @@
-//
-// Created by wt on 0017.
-//
-
 #ifndef SMARTCAR_ENCODER_H
 #define SMARTCAR_ENCODER_H
 #include <Arduino.h>
@@ -15,6 +11,7 @@
 
 #define MOTORL_COUNTPIN1 4 // LB_W
 #define MOTORL_COUNTPIN2 5 // LB_Y
+
 
 typedef enum{
     LeftMotor,RightMotor

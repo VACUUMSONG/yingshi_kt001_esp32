@@ -5,10 +5,8 @@
 #include "Encoder.h"
 #include "mylog.h"
 
-
 static volatile int16_t motor_left_counter;
 static volatile int16_t motor_right_counter;
-
 
 void Read_Left_Moto(){
     if (digitalRead(MOTORL_COUNTPIN1) == digitalRead(MOTORL_COUNTPIN2)) {
@@ -24,7 +22,6 @@ void Read_Right_Moto(){
     }else{
         motor_right_counter--;
     }
-
 }
 
 Encoder::Encoder(int direction, MotorPosition left_or_right) {

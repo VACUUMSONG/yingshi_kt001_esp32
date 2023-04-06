@@ -1,30 +1,24 @@
 #include <Arduino.h>
 
+#include "Bat.h"
 #include "Car.h"
 #include "parser.h"
 
 float vel = 0, angular = 0;
-//左电机驱动定义
-#define MOTORL_PWN 19
-#define MOTORL_PIN1 7
-#define MOTORL_PIN2 6
 
-
-//右电机驱动定义
-#define MOTORR_PWN 1
-#define MOTORR_PIN1 10
-#define MOTORR_PIN2 18
-
+/*==================== 电池 ==========================*/
+// Battary voltage  Monitor
+Bat bat(BATPIN_ADC,BATPIN_BUZZER);
 /*==================== 小车 ==========================*/
 // 左电机
-Motor lmotor(MOTORL_PIN1, MOTORL_PIN2, MOTORL_PWN, 1);
+Motor lmotor(MOTORL_PIN1, MOTORL_PIN2, MOTORL_PWM, 1);
 // 左编码器
 Encoder lencoder(-1, LeftMotor);
 // 左轮
 Wheel lwheel(lmotor, lencoder, true);
 
 // 右电机
-Motor rmotor(MOTORR_PIN1, MOTORR_PIN2, MOTORR_PWN, -1);
+Motor rmotor(MOTORR_PIN1, MOTORR_PIN2, MOTORR_PWM, -1);
 // 右编码器
 Encoder rencoder(1, RightMotor);
 // 右轮
@@ -33,7 +27,9 @@ Wheel rwheel(rmotor,rencoder, false);
 Car Kt001(lwheel,rwheel);
 /**====================================================**/
 TaskHandle_t readCommandTask;
+TaskHandle_t readBatVoltageTask;
 
+// 和校验
 uint8_t checksum(uint8_t* buf, size_t len)
 {
   uint8_t sum = 0x00;
@@ -43,9 +39,15 @@ uint8_t checksum(uint8_t* buf, size_t len)
   }
   return sum;
 }
+
+void readBatVoltage(void* param)
+{
+  bat.setBatVoltageAlarm();
+}
+
 void readCommand(void* param)
 {
-  Serial.print(" start to receive command.\n");
+  // Serial.print(" start to receive command.\n");
   enum frameState
   {
     State_Head1, State_Head2, State_Size, State_Type, 
@@ -113,7 +115,7 @@ void readCommand(void* param)
           Serial.readBytes(command+4, 6);
           state = State_Head1;
           break;
-
+      
       case State_CheckSum:         //waiting for frame CheckSum
           command[10] = Serial.read();
           state = command[10] == checksum(command,10) ? State_Handle : State_Head1;
@@ -137,6 +139,7 @@ void readCommand(void* param)
             // TODO
           }else if (frame_type == receiveType_params){
             // TODO
+            
           }else{
             // not should go here.
           }
@@ -162,6 +165,7 @@ frameState state = State_Head1; // init with state==Head1
 uint8_t command[rBUFFER_SIZE];    // 接收的指令
 uint8_t publishMsg[sBUFFER_SIZE]; // 发送的指令
 
+
 //Init
 void setup() {
   Serial.begin(115200);
@@ -173,13 +177,14 @@ void setup() {
                     10000,             /* Stack size of task */
                     NULL,              /* parameter of the task */
                     1,                 /* priority of the task */
-                    &readCommandTask,            /* Task handle to keep track of created task */
+                    &readCommandTask,  /* Task handle to keep track of created task */
                     1);                /* task on core 2*/
-
 }
-float last_pose_x, last_pose_y, last_angular;
+
 
 void loop() {
+
+  bat.setBatVoltageAlarm();
 
   Kt001.spin(); //转动
   
@@ -197,21 +202,7 @@ void loop() {
   msg.x_pos.fv = pose_x;
   msg.y_pos.fv = pose_y;
   msg.pose_angular.fv = pose_angular;
-  // msg.x_v.fv = 0.0;
-  // msg.y_v.fv = 0.0;
-  // msg.angular_v.fv = 0.0;
-  // msg.x_pos.fv = 0.0;
-  // msg.y_pos.fv = 0.0;
-  // msg.pose_angular.fv = 0.0;
-  
-  // if(last_pose_x == pose_x && last_pose_y == pose_y && last_angular == pose_angular){
-  //   return;
-  // }
-  // last_pose_x = pose_x; last_pose_y = pose_y; last_angular = pose_angular;
-  // mylog("pose_x: %f, pose_y: %f, pose_angular: %f \n", pose_x, pose_y, pose_angular);
+
   set_publishmsg(publishMsg, msg);
   Serial.write(publishMsg, sBUFFER_SIZE);
-
-  // Kt001.getVel();
-  // Kt001.getAnguler();
 }

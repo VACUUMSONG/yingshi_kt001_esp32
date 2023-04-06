@@ -1,13 +1,19 @@
-//
-// Created by wt on 0017.
-//
-
 #ifndef SMARTCAR_MOTOR_H
 #define SMARTCAR_MOTOR_H
 
 #include <esp32-hal.h>
 #include "config.h"
 #include <math.h>
+
+//左电机驱动定义
+#define MOTORL_PWM 19
+#define MOTORL_PIN1 7
+#define MOTORL_PIN2 6
+
+//右电机驱动定义
+#define MOTORR_PWM 1
+#define MOTORR_PIN1 10
+#define MOTORR_PIN2 18
 
 //马达
 //属性:定时器  channel 第一个GPIO 第一个DPIO编号  第一个GPIO 第一个DPIO编号
@@ -27,6 +33,10 @@ public:
     ~Motor();
     //初始化方法
     void init();
+
+    void forward();
+    void backward();
+    void stop();
 
     /**
      * 马达转动 前  后

@@ -1,7 +1,3 @@
-//
-// Created by wt on 0017.
-//
-
 #include "Wheel.h"
 
 Wheel::Wheel(Motor motor, Encoder encoder, bool isleft) : motor(motor), encoder(encoder), pid(2.636, 0, 1.611) {
@@ -18,7 +14,7 @@ void Wheel::updateTargetVel(float targetSpeed) {
         //更新目标速度
         this->targetSpeed = targetSpeed;
         //重置pid
-        pid.reset();
+        // pid.reset();
     }
 }
 

@@ -1,7 +1,3 @@
-//
-// Created by wt on 0017.
-//
-
 #include "Car.h"
 
 Car::Car(Wheel backLWheel, Wheel backRWheel) : backLWheel(backLWheel), backRWheel(backRWheel) {
@@ -60,7 +56,6 @@ void Car::updatePid(float kp, float ki, float kd){
     backLWheel.updatePid(kp, ki, kd);
     backRWheel.updatePid(kp, ki, kd);
 }
-
 
 // 获取左轮速度
 float Car::getLVel(){

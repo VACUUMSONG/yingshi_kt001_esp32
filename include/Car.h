@@ -1,7 +1,3 @@
-//
-// Created by wt on 0017.
-//
-
 #ifndef SMARTCAR_CAR_H
 #define SMARTCAR_CAR_H
 
@@ -38,11 +34,12 @@ public:
 
     void updatePid(float kp, float ki, float kd);
 
+    
     float getLVel(); // 获取左轮速度
     float getRVel(); // 获取右轮速度
-    
     //获取线速度
     float getVel();
+
     //获取角速度
     float getAnguler();
 

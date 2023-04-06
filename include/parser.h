@@ -12,6 +12,7 @@
 #define rBUFFER_SIZE 11   // receive buffer 's length
 #define sBUFFER_SIZE 27   // send buffer 's length
 
+// uint与HEX快速获取
 typedef union{
     uint8_t ivalue[2];
     int16_t i16value;
@@ -19,8 +20,8 @@ typedef union{
 
 //浮点数与HEX快速获取
 typedef	union{
-		float fv;
-		uint8_t cv[4];
+	float fv;
+	uint8_t cv[4];
 }float_union;
 
 //发送数据结构

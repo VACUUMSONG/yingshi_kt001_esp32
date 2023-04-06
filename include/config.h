@@ -17,6 +17,6 @@
 // 左右轮子的距离
 #define WHEEL_DISTANCE      0.205f
 // 前后轮子的轴距
-#define WHEEL_AXIS          0.160f
+#define WHEEL_AXIS          0.170f
 
 #endif //CAR_CONFIG_H
